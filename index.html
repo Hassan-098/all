@@ -28,7 +28,7 @@
             }
             document.getElementById('status').innerText = "جاري التحميل...";
             
-            fetch('https://your-backend-url.onrender.com/download', {
+            fetch('https://back-for-all.onrender.com', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: url, type: type })
