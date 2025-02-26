@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحميل الفيديوهات</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        input { width: 80%; padding: 10px; margin: 10px; }
+        button { padding: 10px 20px; margin: 5px; background: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>تحميل الفيديوهات من يوتيوب، تيك توك، تويتر، إنستقرام، وريدديت</h2>
+    <input type="text" id="videoUrl" placeholder="ألصق رابط الفيديو هنا">
+    <br>
+    <button onclick="downloadVideo('video')">تحميل الفيديو</button>
+    <button onclick="downloadVideo('playlist')">تحميل قائمة التشغيل</button>
+    <button onclick="downloadVideo('audio')">تحميل الصوت فقط</button>
+    <p id="status"></p>
+
+    <script>
+        function downloadVideo(type) {
+            let url = document.getElementById('videoUrl').value;
+            if (!url) {
+                alert('يرجى إدخال رابط الفيديو');
+                return;
+            }
+            document.getElementById('status').innerText = "جاري التحميل...";
+            
+            fetch('https://your-backend-url.onrender.com/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, type: type })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    let a = document.createElement("a");
+                    a.href = data.download_link;
+                    a.download = "";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    document.getElementById('status').innerText = "تم بدء التحميل...";
+                } else {
+                    alert('حدث خطأ أثناء التحميل: ' + data.error);
+                    document.getElementById('status').innerText = "";
+                }
+            })
+            .catch(error => {
+                alert('حدث خطأ أثناء الاتصال بالخادم');
+                document.getElementById('status').innerText = "";
+            });
+        }
+    </script>
+</body>
+</html>
